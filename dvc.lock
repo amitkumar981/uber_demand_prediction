@@ -5,5 +5,31 @@ stages:
     deps:
     - path: src/data/data_injection.py
       hash: md5
-      md5: a5c4e3b433c9cc777fe9f3f5c578b424
-      size: 4061
+      md5: acdbc0fce8a3b6c8a3f822803d2dad88
+      size: 4089
+  feature_extraction:
+    cmd: python src/feature_engineering/feature_extraction.py
+    deps:
+    - path: src/feature_engineering/feature_extraction.py
+      hash: md5
+      md5: 27c4ef22fc4e31b6ae57dd2db2f201b0
+      size: 7376
+    params:
+      params.yaml:
+        feature_extraction.KMeans.init: k-means++
+        feature_extraction.KMeans.n_clusters: 50
+        feature_extraction.KMeans.random_state: 30
+        feature_extraction.resample_data.alpha: 0.4
+    outs:
+    - path: data/processed/resampled_df.csv
+      hash: md5
+      md5: 9c98eba95238a87dc79a412876b1d542
+      size: 13968949
+    - path: src/model/kmeans.joblib
+      hash: md5
+      md5: 009c7188e3495895d154348415b2b8ec
+      size: 151305
+    - path: src/model/scaler.joblib
+      hash: md5
+      md5: c7a5778c3d1b7514ab94bb4fa4f85cd0
+      size: 1005

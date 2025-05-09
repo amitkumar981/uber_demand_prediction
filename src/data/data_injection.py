@@ -88,7 +88,7 @@ def remove_outlier(data: dd.DataFrame) -> dd.DataFrame:
 def save_data(data,save_path):
     try:
         logger.info(f"saving data at{save_path}")
-        data.to_csv(save_path,index=False)
+        data.to_csv(save_path,index=True)
         logger.info(f"saved data successfully at {save_path}")
     except Exception as e:
         logger.error(f"error in saving data :{e}")
@@ -109,6 +109,7 @@ def main():
 
     save_path=root_dir/'data'/'interim'/'df_without_outlier.csv'
     save_data(final_df,save_path)
+    print(final_df.columns)
 
 if __name__=="__main__":
      main()

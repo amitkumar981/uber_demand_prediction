@@ -3,5 +3,26 @@ stages:
     cmd: python src/data/data_injection.py
     deps: 
       - src/data/data_injection.py
+
+  feature_extraction:
+    cmd: python src/feature_engineering/feature_extraction.py
+    deps:
+      - src/feature_engineering/feature_extraction.py
+    params:
+      - feature_extraction.KMeans.n_clusters
+      - feature_extraction.KMeans.init
+      - feature_extraction.KMeans.random_state
+      - feature_extraction.resample_data.alpha
+    outs:
+      - data/processed/resampled_df.csv
+      - src/model/scaler.joblib
+      - src/model/kmeans.joblib
+
+
+      
+
+    
+
+
     
 
