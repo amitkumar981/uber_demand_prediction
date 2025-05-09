@@ -18,18 +18,38 @@ stages:
       params.yaml:
         feature_extraction.KMeans.init: k-means++
         feature_extraction.KMeans.n_clusters: 50
-        feature_extraction.KMeans.random_state: 30
+        feature_extraction.KMeans.random_state: 42
         feature_extraction.resample_data.alpha: 0.4
     outs:
     - path: data/processed/resampled_df.csv
       hash: md5
-      md5: 9c98eba95238a87dc79a412876b1d542
-      size: 13968949
+      md5: 90183636853e80d44deb08fdfbaba580
+      size: 14002918
     - path: src/model/kmeans.joblib
       hash: md5
-      md5: 009c7188e3495895d154348415b2b8ec
+      md5: f42c15a988cc70d3751ac870609f602f
       size: 151305
     - path: src/model/scaler.joblib
       hash: md5
       md5: c7a5778c3d1b7514ab94bb4fa4f85cd0
       size: 1005
+  feature_processing:
+    cmd: python src/feature_engineering/feature_processing.py
+    deps:
+    - path: data/processed/resampled_df.csv
+      hash: md5
+      md5: 90183636853e80d44deb08fdfbaba580
+      size: 14002918
+    - path: src/feature_engineering/feature_processing.py
+      hash: md5
+      md5: 91ca5b884bfd95a6bf79b378bad68140
+      size: 3977
+    outs:
+    - path: data\processed\testing_df.csv
+      hash: md5
+      md5: 3f9ad6580be0b57a93296a631c603604
+      size: 5936573
+    - path: data\processed\training_df.csv
+      hash: md5
+      md5: c92e992ebee79b878d447fd9f3a7cd8a
+      size: 11410981

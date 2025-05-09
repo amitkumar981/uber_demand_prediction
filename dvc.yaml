@@ -17,6 +17,14 @@ stages:
       - data/processed/resampled_df.csv
       - src/model/scaler.joblib
       - src/model/kmeans.joblib
+  feature_processing:
+    cmd : python src/feature_engineering/feature_processing.py
+    deps:
+      - src/feature_engineering/feature_processing.py
+      - data/processed/resampled_df.csv
+    outs:
+      - data\processed\training_df.csv
+      - data\processed\testing_df.csv
 
 
       
