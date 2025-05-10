@@ -25,6 +25,16 @@ stages:
     outs:
       - data\processed\training_df.csv
       - data\processed\testing_df.csv
+  model_training:
+    cmd: Python src/model/train.py
+    deps: 
+      - src\model\train.py    
+      - data/processed/training_df.csv
+    outs: 
+      - src\model\preprocessor.joblib
+      - src\model\model.joblib
+
+      
 
 
       

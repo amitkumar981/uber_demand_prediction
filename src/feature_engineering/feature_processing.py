@@ -78,7 +78,7 @@ def split_data(data: pd.DataFrame):
 
 def save_data(data: pd.DataFrame, save_path: Path):
     try:
-        data.to_csv(save_path, index=False)
+        data.to_csv(save_path, index=True)
         logger.info(f"Data saved at {save_path}")
     except Exception as e:
         logger.error(f"Error saving data to {save_path}: {e}")

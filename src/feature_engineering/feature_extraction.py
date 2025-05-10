@@ -27,7 +27,7 @@ logger.addHandler(console_handler)
 def load_data(data_path: str) -> pd.io.parsers.TextFileReader:
     try:
         logger.info(f"loading data at: {data_path}")
-        df_reader = pd.read_csv(data_path, chunksize=100000, usecols=["pickup_latitude", "pickup_longitude"])
+        df_reader = pd.read_csv(data_path, chunksize=100000, usecols=["pickup_latitude","pickup_longitude"])
         logger.info(f"data loaded successfully from: {data_path}")
         return df_reader
     except Exception as e:

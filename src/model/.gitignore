@@ -1,2 +1,4 @@
 /scaler.joblib
 /kmeans.joblib
+/preprocessor.joblib
+/model.joblib
