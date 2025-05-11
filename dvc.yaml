@@ -7,6 +7,7 @@ stages:
   feature_extraction:
     cmd: python src/feature_engineering/feature_extraction.py
     deps:
+      - src/data/data_injection.py
       - src/feature_engineering/feature_extraction.py
     params:
       - feature_extraction.KMeans.n_clusters
@@ -17,30 +18,43 @@ stages:
       - data/processed/resampled_df.csv
       - src/model/scaler.joblib
       - src/model/kmeans.joblib
+
   feature_processing:
-    cmd : python src/feature_engineering/feature_processing.py
+    cmd: python src/feature_engineering/feature_processing.py
     deps:
       - src/feature_engineering/feature_processing.py
       - data/processed/resampled_df.csv
     outs:
-      - data\processed\training_df.csv
-      - data\processed\testing_df.csv
+      - data/processed/training_df.csv
+      - data/processed/testing_df.csv
+
   model_training:
-    cmd: Python src/model/train.py
+    cmd: python src/model/train.py
     deps: 
-      - src\model\train.py    
+      - src/model/train.py    
       - data/processed/training_df.csv
     outs: 
-      - src\model\preprocessor.joblib
-      - src\model\model.joblib
+      - src/model/preprocessor.joblib
+      - src/model/model.joblib
+
   model_evaluation:
     cmd: python src/model/model_evaluation.py
     deps: 
-       - src/model/model_evaluation.py
-       - data/processed/training_df.csv
-       - data/processed/testing_df.csv
+      - src/model/model_evaluation.py
+      - data/processed/training_df.csv
+      - data/processed/testing_df.csv
+      - src/model/model.joblib
+      - src/model/preprocessor.joblib
     outs:
-       - root_dir/run_information.json
+      - run_information.json
+
+  register_model:
+    cmd: python src/model/register_model.py
+    deps:
+      - src/model/register_model.py
+      - run_information.json
+
+  
 
 
    
