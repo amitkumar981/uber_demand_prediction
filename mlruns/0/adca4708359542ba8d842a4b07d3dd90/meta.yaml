@@ -1,0 +1,15 @@
+artifact_uri: file:///E:/uber_demand_prediction/mlruns/0/adca4708359542ba8d842a4b07d3dd90/artifacts
+end_time: 1746954667104
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: adca4708359542ba8d842a4b07d3dd90
+run_name: agreeable-moth-313
+run_uuid: adca4708359542ba8d842a4b07d3dd90
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1746954666162
+status: 3
+tags: []
+user_id: redhu

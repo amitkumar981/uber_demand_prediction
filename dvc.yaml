@@ -33,6 +33,17 @@ stages:
     outs: 
       - src\model\preprocessor.joblib
       - src\model\model.joblib
+  model_evaluation:
+    cmd: python src/model/model_evaluation.py
+    deps: 
+       - src/model/model_evaluation.py
+       - data/processed/training_df.csv
+       - data/processed/testing_df.csv
+    outs:
+       - root_dir/run_information.json
+
+
+   
 
       
 

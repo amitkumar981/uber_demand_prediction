@@ -1,0 +1,15 @@
+artifact_uri: file:///E:/uber_demand_prediction/mlruns/0/3d9ce2935b1b423e9b2662783f7cec5b/artifacts
+end_time: 1746955028023
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: 3d9ce2935b1b423e9b2662783f7cec5b
+run_name: welcoming-pig-467
+run_uuid: 3d9ce2935b1b423e9b2662783f7cec5b
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1746955026665
+status: 3
+tags: []
+user_id: redhu

@@ -1,0 +1,15 @@
+artifact_uri: file:///E:/uber_demand_prediction/mlruns/0/163150004bd940038e2c80050aa3da48/artifacts
+end_time: 1746954739436
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: 163150004bd940038e2c80050aa3da48
+run_name: defiant-lynx-697
+run_uuid: 163150004bd940038e2c80050aa3da48
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1746954738516
+status: 3
+tags: []
+user_id: redhu

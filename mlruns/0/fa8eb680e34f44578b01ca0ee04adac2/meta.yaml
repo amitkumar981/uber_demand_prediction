@@ -1,0 +1,15 @@
+artifact_uri: file:///E:/uber_demand_prediction/mlruns/0/fa8eb680e34f44578b01ca0ee04adac2/artifacts
+end_time: 1746955202008
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: fa8eb680e34f44578b01ca0ee04adac2
+run_name: abundant-crab-890
+run_uuid: fa8eb680e34f44578b01ca0ee04adac2
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1746955200630
+status: 3
+tags: []
+user_id: redhu
