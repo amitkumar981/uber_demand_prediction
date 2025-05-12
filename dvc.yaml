@@ -1,7 +1,7 @@
 stages:
   data_injection:
     cmd: python src/data/data_injection.py
-    deps: 
+    deps:
       - src/data/data_injection.py
 
   feature_extraction:
