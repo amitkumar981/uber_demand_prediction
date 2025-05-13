@@ -30,7 +30,7 @@ jobs:
       env:
         AWS_ACCESS_KEY_ID: ${{ secrets.ACCESS_KEY_ID }}
         AWS_SECRET_ACCESS_KEY: ${{ secrets.SECRET_ACCESS_KEY }}
-        AWS_DEFAULT_REGION: ap-southeast-2
+        AWS_DEFAULT_REGION: us_east-1
       run: dvc pull
 
     - name: Run DVC Pipeline
@@ -42,7 +42,7 @@ jobs:
       env:
         AWS_ACCESS_KEY_ID: ${{ secrets.ACCESS_KEY_ID }}
         AWS_SECRET_ACCESS_KEY: ${{ secrets.SECRET_ACCESS_KEY }}
-        AWS_DEFAULT_REGION: ap-southeast-2
+        AWS_DEFAULT_REGION: us-east-1
       run: dvc push
 
     - name: Configure Git
@@ -87,19 +87,18 @@ jobs:
         AWS_ACCESS_KEY_ID: ${{ secrets.ACCESS_KEY_ID }}
         AWS_SECRET_ACCESS_KEY: ${{ secrets.SECRET_ACCESS_KEY }}
       run: |
-        aws ecr get-login-password --region ap-southeast-2 | docker login --username AWS --password-stdin 565393027942.dkr.ecr.ap-southeast-2.amazonaws.com
+        aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 565393027942.dkr.ecr.us-east-1.amazonaws.com
 
     - name: Build Docker image
-      run: docker build -t swiggy-food-delivery-time-prediction .
+      run: docker build -t uber_demand-prediction .
 
     - name: Tag Docker image
       run: |
-        docker tag swiggy-food-delivery-time-prediction:latest \
-        565393027942.dkr.ecr.ap-southeast-2.amazonaws.com/swiggy-food-delivery-time-prediction:latest
+        docker tag uber_demand-prediction:latest 565393027942.dkr.ecr.us-east-1.amazonaws.com/uber_demand-prediction:latest
 
     - name: Push Docker image to AWS ECR
       run: |
-        docker push 565393027942.dkr.ecr.ap-southeast-2.amazonaws.com/swiggy-food-delivery-time-prediction:latest
+        docker push 565393027942.dkr.ecr.us-east-1.amazonaws.com/uber_demand-prediction:latest
 
     - name: Zip files for deployment
       run: |
@@ -109,20 +108,20 @@ jobs:
       env:
         AWS_ACCESS_KEY_ID: ${{ secrets.ACCESS_KEY_ID }}
         AWS_SECRET_ACCESS_KEY: ${{ secrets.SECRET_ACCESS_KEY }}
-        AWS_DEFAULT_REGION: ap-southeast-2
+        AWS_DEFAULT_REGION: us-east-1
       run: |
-        aws s3 cp deployment.zip s3://swiggy-food-delivery-time-prediction-bucket/deployment.zip
+        aws s3 cp deployment.zip s3://uber-demand-predictor-deployment-bucket/deployment.zip
 
     - name: Deploy to AWS CodeDeploy
       env:
         AWS_ACCESS_KEY_ID: ${{ secrets.ACCESS_KEY_ID }}
         AWS_SECRET_ACCESS_KEY: ${{ secrets.SECRET_ACCESS_KEY }}
-        AWS_DEFAULT_REGION: ap-southeast-2
+        AWS_DEFAULT_REGION: us-east-1
       run: |
         aws deploy create-deployment \
-          --application-name swiggyfooddeliverytimeprediction \
+          --application-name uberdemandprediction \
           --deployment-config-name CodeDeployDefault.OneAtATime \
-          --deployment-group-name swiggyfooddeliverytimepredictiongroup \
-          --s3-location bucket=swiggy-food-delivery-time-prediction-bucket,key=deployment.zip,bundleType=zip \
+          --deployment-group-name uberdemandpredictiongroup \
+          --s3-location bucket=uber-demand-predictor-deployment-bucket,key=deployment.zip,bundleType=zip \
           --file-exists-behavior OVERWRITE \
-          --region ap-southeast-2
+          --region us-east-1

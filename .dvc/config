@@ -1,0 +1,2 @@
+['remote "my_remote"']
+    url = s3://uber-demand-prediction-bucket

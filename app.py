@@ -12,8 +12,8 @@ import operator  # For itemgetter
 
 set_config(transform_output="pandas")
 
-mlflow.set_tracking_uri('https://dagshub.com/amitkumar981/uber_demand_prediction.mlflow')
-dagshub.init(repo_owner='amitkumar981', repo_name='uber_demand_prediction', mlflow=True)
+#mlflow.set_tracking_uri('https://dagshub.com/amitkumar981/uber_demand_prediction.mlflow')
+#dagshub.init(repo_owner='amitkumar981', repo_name='uber_demand_prediction', mlflow=True)
 
 root_dir = Path(__file__).parent
 
