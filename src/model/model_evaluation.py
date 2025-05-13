@@ -169,7 +169,7 @@ def main():
         artifact_uri = mlflow.get_artifact_uri()
          # get the run id 
         run_id = run.info.run_id
-        model_name = "uber demand prediction"
+        model_name = "uber_demand_prediction"
 
         save_model_info(save_json_path=save_json_path,
                         run_id=run_id,
