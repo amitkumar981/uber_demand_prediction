@@ -8,9 +8,7 @@ import logging
 from pathlib import Path
 import os
 
-# Step 1: Set DagsHub authentication (REQUIRED for private repos)
-os.environ["MLFLOW_TRACKING_USERNAME"] = "amitkumar981"
-os.environ["MLFLOW_TRACKING_PASSWORD"] = "f64452f523ca99429d7e3fbf93a4f87bc307ac7c"  
+ 
 
 import dagshub
 dagshub.init(repo_owner='amitkumar981', repo_name='uber_demand_prediction', mlflow=True)
