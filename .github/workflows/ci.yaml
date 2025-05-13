@@ -1,0 +1,128 @@
+name: CI-CD Pipeline
+
+on:
+  push:
+
+jobs:
+  model-deployment:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+      with:
+        lfs: true
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+        cache: 'pip'
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install 'dvc[s3]'
+        pip install dagshub
+
+    - name: Pull DVC-tracked data
+      env:
+        AWS_ACCESS_KEY_ID: ${{ secrets.ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.SECRET_ACCESS_KEY }}
+        AWS_DEFAULT_REGION: ap-southeast-2
+      run: dvc pull
+
+    - name: Run DVC Pipeline
+      env:
+        DAGSHUB_USER_TOKEN: ${{ secrets.CI_TOKEN }}
+      run: dvc repro
+
+    - name: Push DVC-tracked data to remote
+      env:
+        AWS_ACCESS_KEY_ID: ${{ secrets.ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.SECRET_ACCESS_KEY }}
+        AWS_DEFAULT_REGION: ap-southeast-2
+      run: dvc push
+
+    - name: Configure Git
+      run: |
+        git config --global user.name "github-actions[bot]"
+        git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+    - name: Add changes to Git
+      run: git add .
+
+    - name: Commit changes
+      if: ${{ github.actor != 'github-actions[bot]' }}
+      run: |
+        git commit -m "Automated commit of DVC outputs and updated code" || echo "No changes to commit"
+
+    - name: Push changes
+      if: ${{ github.actor != 'github-actions[bot]' }}
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: git push origin ${{ github.ref_name }}
+
+    - name: Install test dependencies
+      run: pip install pytest
+
+    - name: Run Model Loading test
+      env:
+        DAGSHUB_USER_TOKEN: ${{ secrets.CI_TOKEN }}
+      run: pytest tests/test_model_loading.py
+
+    - name: Run Model performance test
+      env:
+        DAGSHUB_USER_TOKEN: ${{ secrets.CI_TOKEN }}
+      run: pytest tests/test_model_perf.py
+
+    - name: Promote model to production
+      env:
+        DAGSHUB_USER_TOKEN: ${{ secrets.CI_TOKEN }}
+      run: python notebooks/promote_model_to_production.py
+
+    - name: Log in to ECR
+      env:
+        AWS_ACCESS_KEY_ID: ${{ secrets.ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.SECRET_ACCESS_KEY }}
+      run: |
+        aws ecr get-login-password --region ap-southeast-2 | docker login --username AWS --password-stdin 565393027942.dkr.ecr.ap-southeast-2.amazonaws.com
+
+    - name: Build Docker image
+      run: docker build -t swiggy-food-delivery-time-prediction .
+
+    - name: Tag Docker image
+      run: |
+        docker tag swiggy-food-delivery-time-prediction:latest \
+        565393027942.dkr.ecr.ap-southeast-2.amazonaws.com/swiggy-food-delivery-time-prediction:latest
+
+    - name: Push Docker image to AWS ECR
+      run: |
+        docker push 565393027942.dkr.ecr.ap-southeast-2.amazonaws.com/swiggy-food-delivery-time-prediction:latest
+
+    - name: Zip files for deployment
+      run: |
+        zip -r deployment.zip appspec.yml deploy/scripts/install_dependencies.sh deploy/scripts/start_docker.sh
+
+    - name: Upload ZIP to S3
+      env:
+        AWS_ACCESS_KEY_ID: ${{ secrets.ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.SECRET_ACCESS_KEY }}
+        AWS_DEFAULT_REGION: ap-southeast-2
+      run: |
+        aws s3 cp deployment.zip s3://swiggy-food-delivery-time-prediction-bucket/deployment.zip
+
+    - name: Deploy to AWS CodeDeploy
+      env:
+        AWS_ACCESS_KEY_ID: ${{ secrets.ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.SECRET_ACCESS_KEY }}
+        AWS_DEFAULT_REGION: ap-southeast-2
+      run: |
+        aws deploy create-deployment \
+          --application-name swiggyfooddeliverytimeprediction \
+          --deployment-config-name CodeDeployDefault.OneAtATime \
+          --deployment-group-name swiggyfooddeliverytimepredictiongroup \
+          --s3-location bucket=swiggy-food-delivery-time-prediction-bucket,key=deployment.zip,bundleType=zip \
+          --file-exists-behavior OVERWRITE \
+          --region ap-southeast-2
