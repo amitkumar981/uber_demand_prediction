@@ -3,7 +3,7 @@ import numpy as np
 import dask.dataframe as dd
 import logging
 from pathlib import Path
-import path
+
 
 #configure logging
 
