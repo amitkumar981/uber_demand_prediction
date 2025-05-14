@@ -2,6 +2,6 @@ feature_extraction:
   KMeans:
     n_clusters: 50
     init: k-means++
-    random_state: 30
+    random_state: 42
   resample_data:
     alpha: 0.4
