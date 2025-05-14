@@ -109,7 +109,7 @@ def main():
 
     save_path=root_dir/'data'/'interim'/'df_without_outlier.csv'
     save_data(final_df,save_path)
-    print(final_df.columns)
+  
 
 if __name__=="__main__":
      main()
