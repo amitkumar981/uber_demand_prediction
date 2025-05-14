@@ -12,8 +12,16 @@ import operator  # For itemgetter
 
 set_config(transform_output="pandas")
 
-#mlflow.set_tracking_uri('https://dagshub.com/amitkumar981/uber_demand_prediction.mlflow')
-#dagshub.init(repo_owner='amitkumar981', repo_name='uber_demand_prediction', mlflow=True)
+mlflow.set_tracking_uri('https://dagshub.com/amitkumar981/uber_demand_prediction.mlflow')
+dagshub.init(repo_owner='amitkumar981', repo_name='uber_demand_prediction', mlflow=True)
+
+# get model name
+registered_model_name = 'uber_demand_prediction'
+stage = "Production"
+model_path = f"models:/{registered_model_name}/{stage}"
+
+# load the latest model from model registry
+model = mlflow.sklearn.load_model(model_path)
 
 root_dir = Path(__file__).parent
 
@@ -23,12 +31,12 @@ data_path = root_dir / "data/processed/testing_df.csv"
 kmeans_path = root_dir / "src/model/kmeans.joblib"
 scaler_path = root_dir / "src/model/scaler.joblib"
 encoder_path = root_dir / "src/model/preprocessor.joblib"
-model_path = root_dir / "src/model/model.joblib"
+#model_path = root_dir / "src/model/model.joblib"
 
 # Load model objects
 scaler = joblib.load(scaler_path)
 encoder = joblib.load(encoder_path)
-model = joblib.load(model_path)
+#model = joblib.load(model_path)
 kmeans = joblib.load(kmeans_path)
 
 # Load datasets
